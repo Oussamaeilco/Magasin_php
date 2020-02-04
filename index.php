@@ -112,9 +112,42 @@
 			</div>
 
 			<div id="new_product" hidden="true">
-				Formulaire ajout
-				<form action="" method="POST">
-					<input type="text" />
+
+				<form action="business/Add_Product.php" method="POST">
+					<table>
+						<tr>
+							<td style="margin-right: 25px;">ID:</td>
+							<td><input type="text" name="id" required/></td>
+						</tr>
+						<tr>
+							<td style="margin-right: 25px;">Nom:</td>
+							<td><input type="text" name="nom" required/></td>
+						</tr>
+						<tr>
+							<td style="margin-right: 25px;">Categorie:</td>
+							<td><input type="text" name="categorie" required/></td>
+						</tr>
+						<tr>
+							<td style="margin-right: 25px;">Prix:</td>
+							<td><input type="number" name="prix" required/></td>
+						</tr>
+						<tr>
+							<td style="margin-right: 25px;">Date début:</td>
+							<td><input type="date" name="date_deb" required/></td>
+						</tr>
+						<tr>
+							<td style="margin-right: 25px;">Date fin:</td>
+							<td><input type="date" name="date_fin" required/></td>
+						</tr>
+						<tr>
+							<td style="margin-right: 25px;">Quantité:</td>
+							<td><input type="number" name="qt" required/></td>	
+						</tr>
+						<tr>
+							<td></td>
+							<td><input type="submit" value="Confirmer"/></td>
+						</tr>
+					</table>
 				</form>
 			</div>
 
