@@ -1,5 +1,7 @@
 <?php
-
+	include "dao/MySQL_DB.php";
+	
+	$db=new MySQL_DB();
 ?>
 
 <!DOCTYPE html>
@@ -48,11 +50,35 @@
 	}
 
 	.header{
-		background-color: #A9A9A9;
+		background-color: #696969;
 	}
 
 	.drawer{
 		margin-top: 30px; 
+	}
+
+	.main{
+		border-top-style: dotted;
+  		border-right-style: solid;
+  		border-bottom-style: dotted;
+  		border-left-style: solid;
+		margin-top: 25px;
+		border-color: #696969;
+		padding: 15px;
+	}
+		
+	table {
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	th, td {
+		text-align: left;
+		padding: 8px;
+	}
+
+	tr:nth-child(even) {
+		background-color: #f2f2f2;
 	}
 </style>
 </head>
@@ -66,10 +92,10 @@
 		<div hidden="true" id="drawer" class="drawer">
 			<!-- Buttons for drawer "products" -->
 			<span hidden="true" id="drawer1">
-				<span class="sub_btn">Liste des produits</span> 
-				<span class="sub_btn">Ajouter</span>
-				<span class="sub_btn">Supprimer</span>
-				<span class="sub_btn">Modifier</span>
+				<span class="sub_btn" onclick="sub_btn_actions(0)">Liste des produits</span> 
+				<span class="sub_btn" onclick="sub_btn_actions(1)">Ajouter</span>
+				<span class="sub_btn" onclick="sub_btn_actions(2)">Supprimer</span>
+				<span class="sub_btn" onclick="sub_btn_actions(3)">Modifier</span>
 			</span>
 			<!-- Buttons for drawer "sales" -->
 			<span hidden="true" id="drawer2">
@@ -78,17 +104,35 @@
 			</span>
 		</div>
 	</div>
-	
-	<!-- Show "Products" zone -->
-	<div>
+	<div class="main">
+		<!-- Show "Products" zone -->
+		<div>
+			<div id="list_products">
+				<?php echo $db->getListeProducts() ?>
+			</div>
 
+			<div id="new_product" hidden="true">
+				Formulaire ajout
+				<form action="" method="POST">
+					<input type="text" />
+				</form>
+			</div>
+
+			<div id="delete_product" hidden="true">
+				Selection delete
+			</div>
+
+			<div id="modify_product" hidden="true">
+				modification existant
+			</div>
+
+		</div>
+
+		<!-- Show "Ventes" zone -->
+		<div>
+
+		</div>
 	</div>
-
-	<!-- Show "Ventes" zone -->
-	<div>
-
-	</div>
-
 	<!-- Script JS -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script>
@@ -129,6 +173,42 @@
 					drawer1.hide();
 					drawer2.hide();
 				}
+			}
+		}
+
+		//function switch between sub menus
+		function sub_btn_actions(value){
+			var list=$("#list_products");
+			var nw=$("#new_product");
+			var dl=$("#delete_product");
+			var mod=$("#modify_product");
+			if(value == 0){
+				list.show();
+				nw.hide();
+				dl.hide();
+				mod.hide();
+			}
+			else if(value == 1){
+				
+				list.hide();
+				nw.show();
+				dl.hide();
+				mod.hide();
+			}
+			else if(value == 2)
+			{
+				
+				list.hide();
+				nw.hide();
+				dl.show();
+				mod.hide();
+			}
+			else if(value == 3){
+				
+				list.hide();
+				nw.hide();
+				dl.hide();
+				mod.show();
 			}
 		}
 	</script>

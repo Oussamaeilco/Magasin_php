@@ -8,7 +8,7 @@ class MySQLDatabase{
 	private $url;
 	private $db;
 	
-	function MySQLDatabase($host,$source,$username,$password){
+	function __construct($host,$source,$username,$password){
 		$this->host=$host;
 		$this->source=$source;
 		$this->username=$username;
@@ -18,15 +18,17 @@ class MySQLDatabase{
 		$this->db=new PDO($this->url,$this->username,$this->password);
 		
 	}
-	
+	//select all
 	public function selectAll($tablename){
 		$ps=$this->db->query("SELECT * FROM $tablename");
 		return new ResultSet($ps);
 	}
+	//select
 	public function select($columnname,$index,$tablename){
 		$ps=$this->db->query("SELECT * FROM $tablename WHERE $columnname ='$index'");
 		return new ResultSet($ps);
 	}
+	//insert
 	public function insert($tableName,$row){
 		$req="INSERT INTO $tableName VALUES(\"" . $row[0] . "\"";
 		$n=count($row);
@@ -36,6 +38,7 @@ class MySQLDatabase{
 		$req=$req .")";
 		return $this->db->exec($req);
 	}
+	//select with request
 	public function executeSelect($req){
 		$ps=$this->db->query($req);
 		return new ResultSet($ps);
