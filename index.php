@@ -1,6 +1,9 @@
 <?php
-	include "dao/ProduitsDAO.php";
+	include_once "dao/ProduitsDAO.php";
+	include_once "dao/VentesDAO.php";
+
 	$produits=new ProduitsDAO();
+	$ventes=new VentesDAO();
 ?>
 
 <!DOCTYPE html>
@@ -98,8 +101,8 @@
 			</span>
 			<!-- Buttons for drawer "sales" -->
 			<span hidden="true" id="drawer2">
-				<span class="sub_btn">Nouvelle commande</span>
-				<span class="sub_btn">Facturation</span>
+				<span class="sub_btn" onclick="sub_btn_actions(4)">Nouvelle commande</span>
+				<span class="sub_btn" onclick="sub_btn_actions(5)">Facturation</span>
 			</span>
 		</div>
 	</div>
@@ -109,9 +112,8 @@
 			<div id="list_products">
 				<?php echo $produits->getListeProducts() ?>
 			</div>
-
+			<!-- New Product -->
 			<div id="new_product" hidden="true">
-
 				<form action="controller/controller.php" method="POST">
 					<input type="hidden" value="addProduit" name="action"/>
 					<table>
@@ -150,22 +152,47 @@
 					</table>
 				</form>
 			</div>
-
+			
+			<!-- Delete Product -->
 			<div id="delete_product" hidden="true">
-				<form action="" method="POST">
-
+				<form action="controller/controller.php" method="POST">
+					<input type="hidden" value="deleteProduit" name="action"/>
+					<div>
+						<span style="margin-right: 25px;">Produit :</span>
+						<span>
+								<select name="id" id="delete_id" onchange="">
+									<?php 
+										foreach($produits->getProducts() as $index => $product){
+									?>
+									<option value="<?php echo $index ?>"><?php echo $product ?></option>
+									<?php 
+										}
+									?>
+								</select>
+						</span>
+					
+					<input type="submit" value="Supprimer"/>
+					</div>
 				</form>
 			</div>
-
+			
+			<!-- Modify Product -->	
 			<div id="modify_product" hidden="true">
-				modification existant
+				<?php echo $produits->getListeProductsModify() ?>
 			</div>
 
 		</div>
 
 		<!-- Show "Ventes" zone -->
 		<div>
-
+			<!--Nouvelle commande-->
+			<div id="nouvelle_commande" hidden="true">
+				<?php echo $ventes->getCatalogue() ?>
+			</div>
+			<!--Facture-->
+			<div id="facture" hidden="true">
+				Facture
+			</div>
 		</div>
 	</div>
 	<!-- Script JS -->
@@ -217,11 +244,15 @@
 			var nw=$("#new_product");
 			var dl=$("#delete_product");
 			var mod=$("#modify_product");
+			var cmd=$("#nouvelle_commande");
+			var fct=$("#facture");
 			if(value == 0){
 				list.show();
 				nw.hide();
 				dl.hide();
 				mod.hide();
+				cmd.hide();
+				fct.hide();
 			}
 			else if(value == 1){
 				
@@ -229,6 +260,8 @@
 				nw.show();
 				dl.hide();
 				mod.hide();
+				cmd.hide();
+				fct.hide();
 			}
 			else if(value == 2)
 			{
@@ -237,6 +270,8 @@
 				nw.hide();
 				dl.show();
 				mod.hide();
+				cmd.hide();
+				fct.hide();
 			}
 			else if(value == 3){
 				
@@ -244,8 +279,29 @@
 				nw.hide();
 				dl.hide();
 				mod.show();
+				cmd.hide();
+				fct.hide();
+			}
+			else if(value == 4){
+				
+				list.hide();
+				nw.hide();
+				dl.hide();
+				mod.hide();
+				cmd.show();
+				fct.hide();
+			}
+			else if(value == 5){
+				
+				list.hide();
+				nw.hide();
+				dl.hide();
+				mod.hide();
+				cmd.hide();
+				fct.show();
 			}
 		}
+
 	</script>
 </body>
 </html>
