@@ -75,13 +75,58 @@ class VentesDAO{
 
         return $array;   
     }
+    //Afficher facture
+    function getFacture(){
+        $req="SELECT v.*,A.nom,A.quantite as QTT,pr.valeur as PrixU, A.quantite*pr.valeur as Prix
+        FROM ventes v,(SELECT pv.quantite,pv.id_produit,pv.id_ventes,p.nom,p.categorie FROM magasin.produit_vente pv, produit p where p.id=pv.id_produit) as A,
+        prix pr where v.id=A.id_ventes and  pr.id_produit=A.id_produit and  pr.id=( select max(B.id) from prix B where B.id_produit=A.id_produit ) order by v.id";
+        try{
+            $reponse = $this->bd->executeRequest($req);
+        }catch(Exception $e){
+            die('Erreur : '.$e->getMessage());
+        }
+        $id_ventes=-1;
+        $date_ventes="";
+        $prix_totale=0;
+        $str="";
+        $first=true;
+        while($donnees=$reponse->fetch()){
+            if($id_ventes!=$donnees["id"]){
+                if($first){$first=false; } else{
+                     $str.="</table>
+                     <div style='margin-top:10px;font-weight: bold; color: green;'>ID Facture: $id_ventes  || Date: $date_ventes   || Montant Totale: $prix_totale €</div>
+                     </div>\n"; 
+                    }
+                
+                $id_ventes=$donnees["id"];
+                $date_ventes=$donnees["date"];
+                $prix_totale=$donnees["prix_totale"];
+                
+                $str.="<div style='margin-top:10px;' class='main'>";
+                //$str.="<div style='margin-top:10px;font-weight: bold; color: green;'>ID Facture: $id_ventes  || Date: $date_ventes   || Montant Totale: $prix_totale €</div>";
+                $str.="<table><tr>";
+                $str.="<th>Produit</th><th>Unités Vendus</th><th>Prix Unitaire</th><th>Montant</th></tr>";
+                $str.="<tr><td>".$donnees["nom"]."</td><td>".$donnees["QTT"]."</td><td>".$donnees["PrixU"]."    €</td><td>".$donnees["Prix"]."   €</td></tr>";
+            }
+            else{
+                $str.="<tr><td>".$donnees["nom"]."</td><td>".$donnees["QTT"]."</td><td>".$donnees["PrixU"]."    €</td><td>".$donnees["Prix"]."   €</td></tr>";
+            }
+        }
+        $str.="</table>
+        <div style='margin-top:10px;font-weight: bold; color: green;'>ID Facture: $id_ventes  || Date: $date_ventes   || Montant Totale: $prix_totale €</div>
+        </div>\n"; 
+       
+        
+        $reponse->closeCursor();
+        return $str;
+    }
     /*-------------------------------------*/
     //Créer commande
     function createCommande($array){
         try{
             //Create vente
             $date=date("Y/m/d");
-            $this->pdo->exec("INSERT INTO ventes(date,prix_totale) Values($date,0)");
+            $this->pdo->exec("INSERT INTO ventes(date,prix_totale) Values('$date',0)");
             $id=$this->pdo->lastInsertId();
             $total_price=0;
             foreach($array as $i => $qt){
@@ -92,7 +137,7 @@ class VentesDAO{
                 //
                 try{
                     //
-                    $reponse=$this->bd->executeRequest("SELECT * FROM prix where id_produit=1 order by id desc limit 1");
+                    $reponse=$this->bd->executeRequest("SELECT * FROM prix where id_produit=$i order by id desc limit 1");
                     $prix=$reponse->fetch()["valeur"];
                     $total_price=$total_price+$prix*$qt;
                 }catch(Exception $e){

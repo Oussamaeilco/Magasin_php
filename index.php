@@ -101,8 +101,8 @@
 			</span>
 			<!-- Buttons for drawer "sales" -->
 			<span hidden="true" id="drawer2">
-				<span class="sub_btn" onclick="sub_btn_actions(4)">Nouvelle commande</span>
-				<span class="sub_btn" onclick="sub_btn_actions(5)">Facturation</span>
+				<span class="sub_btn" onclick="sub_btn_actions(4)">Commande</span>
+				<span class="sub_btn" onclick="sub_btn_actions(5)">Factures</span>
 			</span>
 		</div>
 	</div>
@@ -191,7 +191,7 @@
 			</div>
 			<!--Facture-->
 			<div id="facture" hidden="true">
-				Facture
+				<?php echo $ventes->getFacture() ?>
 			</div>
 		</div>
 	</div>
