@@ -1,7 +1,6 @@
 <?php
-	include "dao/MySQL_DB.php";
-	
-	$db=new MySQL_DB();
+	include "dao/ProduitsDAO.php";
+	$produits=new ProduitsDAO();
 ?>
 
 <!DOCTYPE html>
@@ -108,12 +107,13 @@
 		<!-- Show "Products" zone -->
 		<div>
 			<div id="list_products">
-				<?php echo $db->getListeProducts() ?>
+				<?php echo $produits->getListeProducts() ?>
 			</div>
 
 			<div id="new_product" hidden="true">
 
-				<form action="business/Add_Product.php" method="POST">
+				<form action="controller/controller.php" method="POST">
+					<input type="hidden" value="addProduit" name="action"/>
 					<table>
 						<tr>
 							<td style="margin-right: 25px;">ID:</td>
@@ -152,7 +152,9 @@
 			</div>
 
 			<div id="delete_product" hidden="true">
-				Selection delete
+				<form action="" method="POST">
+
+				</form>
 			</div>
 
 			<div id="modify_product" hidden="true">
