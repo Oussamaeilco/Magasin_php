@@ -3,15 +3,15 @@
     include '../dao/VentesDAO.php';
 
     session_start();
-
-    if(!empty($_SESSION)){
-        foreach($_SESSION as $id => $entry){
-            echo "$id => $entry" ;
-        }
-        $db=new VentesDAO();
-        unset($_SESSION);
+    
+    $db=new VentesDAO();
+    if(isset($_SESSION["commande"])){
+        
+        $db->createCommande($_SESSION["commande"]);
+        
+         unset($_SESSION["commande"]);
         //forward
-        //header("Location: ../index.php");
-        //exit();
+        header("Location: ../index.php");
+       exit();
     }
     

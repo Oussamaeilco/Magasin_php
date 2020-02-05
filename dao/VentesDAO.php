@@ -76,7 +76,38 @@ class VentesDAO{
         return $array;   
     }
     /*-------------------------------------*/
-    
+    //Créer commande
+    function createCommande($array){
+        try{
+            //Create vente
+            $date=date("Y/m/d");
+            $this->pdo->exec("INSERT INTO ventes(date,prix_totale) Values($date,0)");
+            $id=$this->pdo->lastInsertId();
+            $total_price=0;
+            foreach($array as $i => $qt){
+                //Create stock_mv
+                $this->pdo->exec("INSERT INTO  stock_mv(date,qt_mv,id_produit) VALUES('$date',-$qt,$i)");
+                //Create produit_vente
+                $this->pdo->exec("INSERT INTO  produit_vente(quantite,id_produit,id_ventes) VALUES('$qt',$i,$id)");
+                //
+                try{
+                    //
+                    $reponse=$this->bd->executeRequest("SELECT * FROM prix where id_produit=1 order by id desc limit 1");
+                    $prix=$reponse->fetch()["valeur"];
+                    $total_price=$total_price+$prix*$qt;
+                }catch(Exception $e){
+                    die('Erreur : '.$e->getMessage());   
+                }
+            }
+            try{
+                $this->pdo->exec("UPDATE ventes SET prix_totale=$total_price where id=$id");
+            }catch(Exception $e){
+                die('Erreur : '.$e->getMessage());   
+            }
+        }catch(Exception $e){
+            die('Erreur : '.$e->getMessage());   
+        }
+    }
     /*--------------------------------------*/
     //Tester si produit existe par id
     function existe($id) : bool{

@@ -68,7 +68,14 @@ if(isset($_POST["action"])){
         //Commande
         case "commandeVente":
             if(!empty($_POST)){
-                $_SESSION=$_POST;
+                $ventes=new VentesDAO();
+                $produits=$ventes->getProducts();
+                $array=[];
+                foreach($produits as $i=>$p){
+                    if($_POST[$i]!=0)
+                        $array[$i]=$_POST[$i];
+                }
+                $_SESSION["commande"]=$array;
                 $url="../business/Add_Commande.php";
                 header("Location:$url");
                 exit();
